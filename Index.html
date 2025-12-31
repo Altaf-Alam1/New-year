@@ -1,1 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury New Year 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Outfit:wght@100;300;900&display=swap');
 
+        :root {
+            --gold: #d4af37;
+            --gold-light: #f9e29c;
+        }
+
+        body {
+            background: #000;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Outfit', sans-serif;
+            color: white;
+            perspective: 1000px;
+        }
+
+        /* Animated Nebula Background */
+        .bg-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #000 70%);
+            transform: translate(-50%, -50%);
+            z-index: -2;
+        }
+
+        /* 3D Glass Card */
+        .main-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 40px;
+            padding: 4rem;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0,0,0,1), inset 0 0 20px rgba(212, 175, 55, 0.1);
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+
+        .gold-text {
+            font-family: 'Cinzel', serif;
+            background: linear-gradient(to bottom, #f9e29c 20%, #d4af37 40%, #b8860b 70%, #f9e29c 90%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4));
+        }
+
+        .countdown-box {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            min-width: 100px;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .btn-celebrate {
+            background: linear-gradient(45deg, #d4af37, #f9e29c);
+            color: #000;
+            font-weight: 900;
+            letter-spacing: 2px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-celebrate:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 15px 30px rgba(212, 175, 55, 0.4);
+        }
+    </style>
+</head>
+<body class="h-screen flex items-center justify-center">
+
+    <div class="bg-glow"></div>
+    <canvas id="canvas"></canvas>
+
+    <div class="main-card max-w-4xl w-full mx-4" id="card">
+        <h3 class="text-gold-light tracking-[0.5em] font-light mb-4 uppercase text-sm">Approaching the Future</h3>
+        
+        <h1 class="text-8xl md:text-[12rem] font-black gold-text leading-none mb-6">2026</h1>
+        
+        <div class="flex flex-wrap justify-center gap-4 mb-12">
+            <div class="countdown-box"><div id="days" class="text-4xl font-bold">00</div><div class="text-xs uppercase opacity-50">Days</div></div>
+            <div class="countdown-box"><div id="hours" class="text-4xl font-bold">00</div><div class="text-xs uppercase opacity-50">Hours</div></div>
+            <div class="countdown-box"><div id="mins" class="text-4xl font-bold">00</div><div class="text-xs uppercase opacity-50">Mins</div></div>
+            <div class="countdown-box"><div id="secs" class="text-4xl font-bold">00</div><div class="text-xs uppercase opacity-50">Secs</div></div>
+        </div>
+
+        <p class="text-xl md:text-2xl text-gray-300 font-light max-w-2xl mx-auto italic leading-relaxed mb-10">
+            "Every end marks a new beginning. May 2026 be your most brilliant chapter yet."
+        </p>
+
+        <button onclick="launchMany()" class="btn-celebrate px-12 py-4 rounded-full text-lg uppercase">
+            Ignite the Night
+        </button>
+    </div>
+
+    <script>
+        // 3D Parallax Card Effect
+        const card = document.getElementById('card');
+        document.addEventListener('mousemove', (e) => {
+            let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+            let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        // High-End Firework Logic
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class FireworkParticle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * (Math.random() * 12),
+                    y: (Math.random() - 0.5) * (Math.random() * 12)
+                };
+                this.alpha = 1;
+                this.friction = 0.97;
+                this.gravity = 0.1;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+                ctx.fill();
+                ctx.restore();
+            }
+
+            update() {
+                this.velocity.x *= this.friction;
+                this.velocity.y *= this.friction;
+                this.velocity.y += this.gravity;
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= 0.008;
+            }
+        }
+
+        function launchMany() {
+            for(let i=0; i<5; i++) {
+                setTimeout(createFirework, i * 200);
+            }
+        }
+
+        function createFirework() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * (canvas.height * 0.6);
+            const color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+            for (let i = 0; i < 150; i++) {
+                particles.push(new FireworkParticle(x, y, color));
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach((p, i) => {
+                if (p.alpha > 0) {
+                    p.update();
+                    p.draw();
+                } else {
+                    particles.splice(i, 1);
+                }
+            });
+            requestAnimationFrame(animate);
+        }
+
+        // Countdown Timer
+        function updateTimer() {
+            const now = new Date();
+            const target = new Date('January 1, 2026 00:00:00');
+            const diff = target - now;
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const m = Math.floor((diff / 1000 / 60) % 60);
+            const s = Math.floor((diff / 1000) % 60);
+
+            document.getElementById('days').innerText = d;
+            document.getElementById('hours').innerText = h;
+            document.getElementById('mins').innerText = m;
+            document.getElementById('secs').innerText = s;
+        }
+
+        setInterval(updateTimer, 1000);
+        setInterval(createFirework, 1500);
+        animate();
+    </script>
+</body>
+</html>
